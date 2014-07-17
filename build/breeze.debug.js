@@ -14285,7 +14285,7 @@ var EntityManager = (function () {
                 }
             } else {
                 var unwrappedArr = unwrapChangedArray(nextTarget, metadataStore, transformFn);
-                if (!__isEmpty(unwrappedArr)) {
+                if ( unwrappedArr != null ) {
                     result[fn(cp.name, cp)] = unwrappedArr;
                 }
               }
@@ -14299,7 +14299,9 @@ var EntityManager = (function () {
         for (var i = 0; i < target.length; i++) {
 
             var itemTarget = target[i];
-            var origItem = target._origValues[0];
+            var origItem = null;
+            if (target._origValues && target._origValues.length > i )
+              origItem = target._origValues[i];
 
             if ( itemTarget === origItem ) {
                 changes = unwrapChangedValues(itemTarget, metadataStore, transformFn);
@@ -14310,6 +14312,9 @@ var EntityManager = (function () {
             if ( !__isEmpty(changes)) {
                 changed = true;
             }
+        }
+        if ( target.length == 0 && ( !target._origValues || target._origValues.length != 0)) {
+          changed = true
         }
 
         if ( changed ) {
